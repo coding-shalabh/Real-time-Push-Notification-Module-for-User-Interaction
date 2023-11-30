@@ -1,0 +1,7 @@
+.readMessage span, .readMessage p{
+    font-weight: bold;
+}
+
+.unreadMessage span, .unreadMessage p{
+    font-weight: 300;
+}
