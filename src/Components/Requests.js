@@ -7,6 +7,7 @@ const Requests = (props) => {
 
   const date = new Date();
 
+
   const [autoRequest, setAutoRequest] = useState({
     date: date.toLocaleDateString(),
     time: date.toLocaleTimeString(),
@@ -22,6 +23,7 @@ const [approveRequest, setApproveRequest] = useState({
     type: 'approve',
     status: 'pending',
 });
+
 
   const handleInput = (val, type)=> {
         type === 'automatic' ? setAutoRequest((prev)=> ({
@@ -59,13 +61,13 @@ const [approveRequest, setApproveRequest] = useState({
     <>
     <Box>
     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} >
-        <TextField multiline value={autoRequest.details} onChange={(e)=> handleInput(e.target.value, 'automatic')} label={'Automatic Request Type'} sx={{marginTop: '20px', width: '420px', background: 'white', borderRadius: '5px'}}/>
+        <TextField multiline value={ autoRequest.details ? autoRequest.details : ''} onChange={(e)=> handleInput(e.target.value, 'automatic')} label={'Automatic Request Type'} sx={{marginTop: '20px', width: '420px', background: 'white', borderRadius: '5px'}}/>
         <IconButton sx={{ marginLeft: '20px'}} onClick={()=> props.onClick(autoRequest)}><DoneIcon /></IconButton>
 
     </Box>
     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} >
     
-        <TextField multiline value={approveRequest.details} onChange={(e)=> handleInput(e.target.value, 'approve')} label={'Approve Request Type'} sx={{marginTop: '20px', width: '420px', background: 'white', borderRadius: '5px'}}/>
+        <TextField multiline value={approveRequest.details ? approveRequest.details : '' } onChange={(e)=> handleInput(e.target.value, 'approve')} label={'Approve Request Type'} sx={{marginTop: '20px', width: '420px', background: 'white', borderRadius: '5px'}}/>
         <IconButton sx={{ marginLeft: '20px'}} onClick={()=> props.onClick(approveRequest)}><DoneIcon /></IconButton>
         </Box>
     </Box>

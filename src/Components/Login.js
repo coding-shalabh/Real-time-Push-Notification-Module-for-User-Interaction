@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, OutlinedInput } from '@mui/material';
+import { Alert, Box, Button, FormControl, InputLabel, OutlinedInput } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
 
@@ -30,22 +30,21 @@ export default function Login(props) {
         try {
             const res = await fetch('https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList.json')
 
-            console.log(res);
+            
 
             const data = await res.json();
-            const userId = Object.keys(data).filter(key => (data[key].username).toLowerCase() === (user.username).toLowerCase() && data[key].password === user.password);
+            const userId = Object.keys(data).filter(key => (data[key]?.username).toLowerCase() === (user?.username).toLowerCase() && data[key]?.password === user?.password);
 
-            console.log(userId);
+
 
             if(userId.length > 0){
                 setAuth(true);
-                console.log(data);
+                console.log(data[userId]);
                 setData(()=> (
                     {id: userId[0],
                         ...data[userId]
                     }
                     ))
-                    console.log(userId.length);
             }else {
                 setAlert(true);
                 setTimeout(()=> {
@@ -85,7 +84,7 @@ export default function Login(props) {
                     </FormControl>
                     <FormControl sx={{ borderRadius: '5px',background:'white', display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column',marginBottom: '20px' }}>
                         <InputLabel htmlFor='Password' color={'black'}>Password</InputLabel>
-                        <OutlinedInput onChange={(e) => handleForm(e.target.value, 'password')} label='Password' color={'black'} value={user.password} sx={{width: '400px'}} required />
+                        <OutlinedInput onChange={(e) => handleForm(e.target.value, 'password')} type='password' label='Password' color={'black'} value={user.password} sx={{width: '400px'}} required />
                     </FormControl>
                     <FormControl sx={{ display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column'}}>
                     </FormControl>

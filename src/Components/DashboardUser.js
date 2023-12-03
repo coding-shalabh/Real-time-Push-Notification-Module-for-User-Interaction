@@ -8,6 +8,8 @@ import CreateIcon from '@mui/icons-material/Create';
 import DoneIcon from '@mui/icons-material/Done';
 import Requests from './Requests';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const NotificationBar = {
     position: 'absolute',
     top: 0,
@@ -26,80 +28,6 @@ const NotificationBar = {
 }
 
 
-// const tempnotification = [
-//     {
-//         title: 'Your account is created',
-//         date: '20/05/30',
-//         time: '12:45PM',
-//         status: 'read',
-//         description: 'lorem ipsum dkfndj fdsjfnmn dfdfknloremmd dsfkndxdeertr errre trrt'
-//     },
-//     {
-//         title: 'New Message Received',
-//         date: '20/06/01',
-//         time: '2:30PM',
-//         status: 'read',
-//         description: 'You have a new message from a friend.'
-//     },
-//     {
-//         title: 'Event Reminder',
-//         date: '20/06/05',
-//         time: '10:00AM',
-//         status: 'unread',
-//         description: 'Reminder: Attend the important event.'
-//     },
-//     {
-//         title: 'Your account is created',
-//         date: '20/05/30',
-//         time: '12:45PM',
-//         status: 'read',
-//         description: 'lorem ipsum dkfndj fdsjfnmn dfdfknloremmd dsfkndxdeertr errre trrt'
-//     },
-//     {
-//         title: 'New Message Received',
-//         date: '20/06/01',
-//         time: '2:30PM',
-//         status: 'unread',
-//         description: 'You have a new message from a friend.'
-//     },
-//     {
-//         title: 'Event Reminder',
-//         date: '20/06/05',
-//         time: '10:00AM',
-//         status: 'read',
-//         description: 'Reminder: Attend the important event.'
-//     },
-//     {
-//         title: 'Upcoming Deadline',
-//         date: '20/06/10',
-//         time: '3:00PM',
-//         status: 'unread',
-//         description: 'Deadline approaching. Finish your tasks on time.'
-//     },
-//     {
-//         title: 'Product Launch',
-//         date: '20/06/15',
-//         time: '1:00PM',
-//         status: 'read',
-//         description: 'Exciting news! Our new product is launching soon.'
-//     },
-//     {
-//         title: 'Upcoming Deadline',
-//         date: '20/06/10',
-//         time: '3:00PM',
-//         status: 'read',
-//         description: 'Deadline approaching. Finish your tasks on time.'
-//     },
-//     {
-//         title: 'Product Launch',
-//         date: '20/06/15',
-//         time: '1:00PM',
-//         status: 'unread',
-//         description: 'Exciting news! Our new product is launching soon.'
-//     },
-// ]
-
-// Use a constant for temporary notifications
 
 const tempnotification = [];
 
@@ -182,32 +110,7 @@ const DashboardUser = () => {
     };
 
     // Function to mark all notifications as read
-    const handleReadAll = useCallback(() => {
-        setUpdatedNotification((prevNotifications) =>
-            prevNotifications.map((item) => ({ ...item, status: 'read' }))
-        );
-    }, []);
 
-    // Function to handle notification popup
-    const handleNotificationPopup = useCallback(
-        (id) => {
-            setUpdatedNotification((prevNotifications) =>
-                prevNotifications.map((item, index) =>
-                    index === id ? { ...item, status: 'read' } : item
-                )
-            );
-
-            setPopup(true);
-            const notificationPopup = updatedNotification.find(
-                (item, index) => index === id
-            );
-            setNotification(notificationPopup);
-            UpdateNotificationLog(undefined, true);
-        },
-        [updatedNotification]
-    );
-
-    // Function to close notification popup
     const handleClosePopup = () => {
         setPopup(false);
     };
@@ -224,154 +127,123 @@ const DashboardUser = () => {
         }
     }, [data.auth, data.userData, initialDataLoaded]);
 
-    // Function to handle request submission
-    const handleRequestSubmit = async (val) => {
-        try {
-            // Creating a new log entry
-            const newLogEntry = {
-                date: val.date,
-                time: val.time,
-                details: val.details,
-                type: val.type,
-                status: 'pending',
-            };
+    const handleNotificationPopup = useCallback((id) => {
+        const index = updatedNotification.findIndex((item, index) => index === id);
 
-            // Creating the payload with the updated requestLog
-            console.log(data);
-
-
-
-            const payload = data.userData?.requestLog === undefined ? {
-                ...data.userData,
-                requestLog: [newLogEntry],
-            } : { ...data.userData, requestLog: [...data.userData.requestLog, newLogEntry] }
-
-            console.log(data);
-
-            // Logging the payload for debugging
-            console.log('Payload:', payload);
-
-            // Sending a PATCH request to update user data
-            console.log(data);
-            const res = await fetch(
-                `https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList/${data.userData.id}.json`,
-                {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                }
-            );
-
-            // Check if the request was successful
-            if (res.ok) {
-                // Parsing the response data
-                const updatedDataRequestList = await res.json();
-
-                // Handling success
-                setAlert((prev) => ({
-                    ...prev,
-                    sendRequests: true,
-                }));
-
-                setAuth(true);
-                setData(updatedDataRequestList);
-                setUpdatedNotification([...updatedDataRequestList.notification]);
-
-                // Setting a timeout to clear the alert
-                const timeoutId = setTimeout(() => {
-                    setAlert((prev) => ({
-                        ...prev,
-                        sendRequests: false,
-                    }));
-                }, 2000);
-
-                // If it's an automatic request, update notification log
-                if (val.type === 'automatic') {
-                    UpdateNotificationLog(val, false, { ...payload });
-                }
-
-                return () => clearTimeout(timeoutId);
-            } else {
-                console.error('Request failed with status:', res.status);
-            }
-        } catch (error) {
-            console.error('Error submitting request:', error);
-            // Handle the error or log it for further investigation
+        if (index !== -1) {
+            setNotification(updatedNotification[index]);
+            setUpdatedNotification((prev) => {
+                const updatedArray = [...prev];
+                updatedArray[index] = { ...updatedArray[index], status: 'read' };
+                sendUpdateNotificationLog(updatedArray);
+                return updatedArray;
+            });
         }
-    };
+        setPopup(true);
+    },[updatedNotification])
 
-    // Function to update notification log
-    const UpdateNotificationLog = async (val, readType, updatedData) => {
-        const payload = val
-            ? {
-                ...updatedData,
-                notification: [
-                    ...updatedNotification,
-                    {
+    const handleRequestSubmit = (val) => {
+        console.log(apiUrl)
+        if (data) {
+            const SubmitRequest = async () => {
+
+                try {
+
+                    console.log(data.userData.requestLog)
+
+                    const notificationLog = {
                         title: '✅ Your Automatic Request is Approved',
                         date: val.date,
                         time: val.time,
                         status: 'unread',
                         description: `Your new automatic request for: " ${val.details} " is approved.`,
-                    },
-                ],
-            }
-            : { ...updatedData };
+                    }
 
-        console.log(payload);
+                    const payload = {
+                        ...data.userData,
+                        requestLog: data.userData?.requestLog === undefined ? [{ ...val }] : [...data.userData.requestLog, { ...val }],
+                        notification: data.userData?.notification === undefined ? [{ ...notificationLog }] : [...data.userData?.notification, { ...notificationLog }]
+
+                    }
+
+                    const res = await fetch(`https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList/${data.userData.id}.json`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify(payload),
+                    })
+
+                    if (res.status === 200) {
+                        setAlert((prev) => ({ ...prev, sendRequests: true }));
+
+                        setTimeout(() => {
+                            setAlert((prev) => ({
+                                ...prev, sendRequests: false
+                            }))
+                        }, 1000)
+
+                        const updateRequestData = await res.json();
+
+                        setAuth(true);
+                        setData({ ...updateRequestData })
+                        UpdateNotificationLog([...updateRequestData.notification]);
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            SubmitRequest();
+        }
+
+    }
+
+    const UpdateNotificationLog = (val) => {
+        setUpdatedNotification(val);
+    }
+
+    const sendUpdateNotificationLog = async (updatedNotificationList)=> {
+        const payload = {
+            ...data.userData,
+            notification: [...updatedNotificationList]
+        }
 
         try {
-            const res = await fetch(
-                `https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList/${data.userData.id}.json`,
-                {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                }
-            );
+            
+            const res = await fetch(`https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList/${data.userData.id}.json`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(payload),
+            })
 
-            const updatedDataNotificationList = await res.json();
-
-            if (res.ok && readType === false) {
-                setAlert((prev) => ({
-                    ...prev,
-                    sendRequests: true,
-                }));
-
-                const timeoutId = setTimeout(() => {
-                    setAlert((prev) => ({
-                        ...prev,
-                        sendRequests: false,
-                    }));
-                }, 2000);
-
+            if(res.ok){
                 setAuth(true);
-                setData(updatedDataNotificationList);
-                setUpdatedNotification([
-                    ...updatedDataNotificationList.notification,
-                ]);
-
-                return () => clearTimeout(timeoutId);
-            } else {
-                console.error('Request failed with status:', res.status);
+                setData({...data.userData, notification: [...updatedNotificationList]})
+                setUpdatedNotification([...updatedNotificationList])
             }
-        } catch (error) {
-            console.error('Error updating notification log:', error);
-            throw error;
-        }
-    };
 
-    // Function to handle logout
-    const handleLogOut = () => {
-        UpdateNotificationLog();
-        setAuth(false);
-        setData({});
-        navigate('/');
-    };
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    const handleReadAll = useCallback(() => {
+        setUpdatedNotification((prev) =>{
+            const updatedList = [...prev].map((item) => ({ 
+                ...item, status: 'read' 
+        }))
+        sendUpdateNotificationLog(updatedList);
+            return updatedList;
+        });
+    }, []);
+
+
+    
+
+    const handleLogOut = () => { }
 
     // Main JSX structure
     return (
@@ -634,7 +506,7 @@ const DashboardUser = () => {
                             position: 'absolute',
                             top: 10,
                         }}
-                        
+
                     >
                         Your Request has been Submitted.
                     </Alert>
