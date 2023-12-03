@@ -44,7 +44,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #272727; /* Color of the thumb (the draggable part) */
+  background-color: #14213d; /* Color of the thumb (the draggable part) */
   border-radius: 6px; /* Border radius of the thumb */
 }
 
@@ -55,9 +55,9 @@
 
 /* Optional: Handle hover and active states */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #1d1d1d;
+  background-color: #14213d;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: #000;
+  background-color: #14213d;
 }

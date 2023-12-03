@@ -1,25 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, OutlinedInput } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
+import Login from './Login';
 
 export default function Signup(props) {
+
+    const navigate = useNavigate();
+    const {setAuth, auth, userData, setData } = useAuth();
+
+    const date = new Date();
+
 
     const [user, setUser] = useState({
         username: '',
         password: '',
         status: true,
-        type: ''
-    });
+        type: 'user',
+        notification: [    {
+            title: 'Your account is created 🎉',
+            date: date.toLocaleDateString(),
+            time: date.toLocaleTimeString(),
+            status: 'unread',
+            description: `Hi 👋, Congratulations on creation of new account.`
+        }],
+        requestLog: '',
+        managedBy: '',
+    })
 
-    const handleForm = (val, type) => {
-        setUser((prev) => ({
-            ...prev,
-            [type]: type === 'type' ? 'Admin' : val
-        }))
+    const handleForm = (val, formType) => {
+        if(formType === 'type'){
+            setUser((prev) => ({
+                ...prev,
+                type: 'Admin',
+            }))
+        }else{
+            setUser((prev) => ({
+                ...prev,
+                [formType]: val,
+            }))
+        }
     }
 
     const handleSubmit = async () => {
 
-        const {username, password, status, type} = user
+        const {username, password, status, type, notification, requestLog} = user
 
         try {
             const res = await fetch('https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList.json', {
@@ -27,25 +52,54 @@ export default function Signup(props) {
                 headers: {
                     'Content-type': 'application/json',
                 },
-                body : JSON.stringify({username, password, status, type})
+                body : JSON.stringify({username, password, status, type, notification, requestLog})
             })
 
+            // if(res){
+            //     setAuth(true);
+            //     setData({
+            //         username,
+            //         password,
+            //         status: true,
+            //         type: 'user',
+            //         id: '',
+            //         notification: [],
+            //         requestLog: [],
+            //         managedBy: '',
+            //     });
+            //     setUser({
+            //         username: '',
+            //         password: '',
+            //         status: true,
+            //         type: '',
+            //         notification: [    {
+            //             title: 'Your account is created 🎉',
+            //             date: date.toLocaleDateString(),
+            //             time: date.toLocaleTimeString(),
+            //             status: 'unread',
+            //             description: `Hi ${this.username} 👋, Congratulations on creation of new account.`
+            //         }],
+            //         requestLog: [],
+            //         managedBy: '',
+
+            //     }) 
+            // }
+
             if(res){
-                console.log('Data logged Successfully');
-                setUser({
-                    username: '',
-                    password: '',
-                    status: true,
-                    type: ''
-                })
+                console.log('woerinf')
+                navigate('/Login')
             }
             
         } catch (error) {
             console.log('There is something wrong:' + error)
         }
-
-
     }
+
+    useEffect(()=> {
+        if(auth){
+            navigate('/DashboardUser');
+        }
+    },[userData])
 
     return (
         <>

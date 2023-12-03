@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, OutlinedInput } from '@mui/material';
+import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, OutlinedInput } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
 
@@ -7,11 +7,16 @@ export default function Login(props) {
 
     const navigate =useNavigate();
     const {auth, setAuth, userData, setData} = useAuth();
+    const [alert,setAlert] = useState(false);
     const [user, setUser] = useState({
         username: '',
         password: '',
         status: true,
-        type: ''
+        type: '',
+        id: '',
+        notification: [],
+        requestLog: [],
+        managedBy: ''
     });
 
     const handleForm = (val, type) => {
@@ -25,15 +30,32 @@ export default function Login(props) {
         try {
             const res = await fetch('https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList.json')
 
+            console.log(res);
+
             const data = await res.json();
+            const userId = Object.keys(data).filter(key => (data[key].username).toLowerCase() === (user.username).toLowerCase() && data[key].password === user.password);
 
-            const userId = Object.keys(data).filter(key => data[key].username === user.username);
+            console.log(userId);
 
-            if(userId){
+            if(userId.length > 0){
                 setAuth(true);
-                setData(data[userId])
+                console.log(data);
+                setData(()=> (
+                    {id: userId[0],
+                        ...data[userId]
+                    }
+                    ))
+                    console.log(userId.length);
+            }else {
+                setAlert(true);
+                setTimeout(()=> {
+                    setAlert(false)
+                }, 2000)
             }
 
+            if((data[userId[0]].type).toLowerCase() === 'admin'){
+                console.log('This is Admin user');
+            }
 
         } catch (error) {
             console.log(error);
@@ -41,8 +63,13 @@ export default function Login(props) {
     }
 
     useEffect(()=> {
-        if(auth){
+        if(auth && (userData.type === 'user')){
             navigate('/DashboardUser')
+        }else if(auth && (userData.type === 'admin')){
+            navigate('/DashboardAdmin');
+            console.log('this is admin')
+        }else {
+            navigate('/');
         }
     },[userData])
 
@@ -58,14 +85,9 @@ export default function Login(props) {
                     </FormControl>
                     <FormControl sx={{ borderRadius: '5px',background:'white', display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column',marginBottom: '20px' }}>
                         <InputLabel htmlFor='Password' color={'black'}>Password</InputLabel>
-                        <OutlinedInput onChange={(e) => handleForm(e.target.value, 'password')} type='password' label='Password' color={'black'} value={user.password} sx={{width: '400px'}} required />
+                        <OutlinedInput onChange={(e) => handleForm(e.target.value, 'password')} label='Password' color={'black'} value={user.password} sx={{width: '400px'}} required />
                     </FormControl>
                     <FormControl sx={{ display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column'}}>
-                    <FormControlLabel
-                        control={<Checkbox onChange={(e) => handleForm(e.target.checked, 'type')} required />}
-                        label="isAdmin"
-                    />
-                        
                     </FormControl>
                     <Button onClick={handleSubmit} variant='contained' color='black' sx={{background: 'white', marginTop: '10px'}} >Submit</Button>
                 </Box>
@@ -74,7 +96,7 @@ export default function Login(props) {
             <Box>
                 <p>Not a member ? <span style={{textDecoration: 'underline', color: 'white'}} onClick={props.handleLogin}>Create account now</span></p>
             </Box>
-
+            <Alert severity="error" sx={{ display: alert ? '' : 'none', position: 'absolute', top: 10, }}>Please enter correct details</Alert>
         </>
     );
 }

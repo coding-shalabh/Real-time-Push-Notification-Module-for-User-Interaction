@@ -1,0 +1,32 @@
+//Push Notification module
+
+This inclues: 
+1. Admin User 1
+2. Admin User 2
+2. User 3
+3. User 4
+4. User 5
+
+Pages-
+1. Login / Signup
+2. Dashboard Admin
+3. Dashboard User
+4. User Logs
+
+Admin user- 
+It has list of user listed under profile, which 1 for Admin user 1, and 2 users under Admin user two, this access have direct option to send data to user to backend.
+Specification fo Admin users:
+1. List of All users
+2. User management
+3. Approve Reject Delete options for all users
+4. 
+-----------------------------------
+User - 
+It has option for registration, it can rely on doing update, to their profile and for a instance they do update a cart to there end which then automatically send there updated data as there notification and also create a log at admin end for the requested data.
+
+
+There is two types of data on is automatically responsed and another one need approval for response.
+
+Tech Stack:
+1. React.Js
+2. 
