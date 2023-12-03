@@ -79,8 +79,7 @@ const DashboardUser = () => {
         };
 
         try {
-            const res = await fetch(
-                `https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList/${data.userData.id}.json`,
+            const res = await fetch(apiUrl + data.userData.id +'.json',
                 {
                     method: 'PATCH',
                     headers: {
@@ -143,7 +142,6 @@ const DashboardUser = () => {
     },[updatedNotification])
 
     const handleRequestSubmit = (val) => {
-        console.log(apiUrl)
         if (data) {
             const SubmitRequest = async () => {
 
@@ -166,7 +164,7 @@ const DashboardUser = () => {
 
                     }
 
-                    const res = await fetch(`https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList/${data.userData.id}.json`, {
+                    const res = await fetch(apiUrl + data.userData.id + '.json', {
                         method: 'PATCH',
                         headers: {
                             'Content-type': 'application/json'
@@ -210,7 +208,7 @@ const DashboardUser = () => {
 
         try {
             
-            const res = await fetch(`https://pushnotificationmodule-a88c5-default-rtdb.firebaseio.com/usersList/${data.userData.id}.json`, {
+            const res = await fetch(apiUrl + data.userData.id +'.json', {
                 method: 'PATCH',
                 headers: {
                     'Content-type': 'application/json'
