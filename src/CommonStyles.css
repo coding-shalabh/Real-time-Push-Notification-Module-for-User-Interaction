@@ -17,8 +17,10 @@
 
 .readMessage span, .readMessage p{
     font-weight: bold;
+    font-size: 10px !important;
 }
 
 .unreadMessage span, .unreadMessage p{
     font-weight: 300;
 }
+

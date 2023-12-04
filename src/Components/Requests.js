@@ -1,6 +1,7 @@
 import { Box, IconButton, TextField } from '@mui/material'
 import DoneIcon from '@mui/icons-material/Done';
 import React, { useEffect, useState } from 'react';
+import styles from './Requests.module.css'
 
 
 const Requests = (props) => {
@@ -61,13 +62,13 @@ const [approveRequest, setApproveRequest] = useState({
     <>
     <Box>
     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} >
-        <TextField multiline value={ autoRequest.details ? autoRequest.details : ''} onChange={(e)=> handleInput(e.target.value, 'automatic')} label={'Automatic Request Type'} sx={{marginTop: '20px', width: '420px', background: 'white', borderRadius: '5px'}}/>
+        <TextField className={styles.FormFields} multiline value={ autoRequest.details ? autoRequest.details : ''} onChange={(e)=> handleInput(e.target.value, 'automatic')} label={'Automatic Request Type'} sx={{marginTop: '20px', width: '420px', background: 'white', borderRadius: '5px'}}/>
         <IconButton sx={{ marginLeft: '20px'}} onClick={()=> props.onClick(autoRequest)}><DoneIcon /></IconButton>
 
     </Box>
     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} >
     
-        <TextField multiline value={approveRequest.details ? approveRequest.details : '' } onChange={(e)=> handleInput(e.target.value, 'approve')} label={'Approve Request Type'} sx={{marginTop: '20px', width: '420px', background: 'white', borderRadius: '5px'}}/>
+        <TextField className={styles.FormFields} multiline value={approveRequest.details ? approveRequest.details : '' } onChange={(e)=> handleInput(e.target.value, 'approve')} label={'Approve Request Type'} sx={{marginTop: '20px', width: '420px', background: 'white', borderRadius: '5px'}}/>
         <IconButton sx={{ marginLeft: '20px'}} onClick={()=> props.onClick(approveRequest)}><DoneIcon /></IconButton>
         </Box>
     </Box>

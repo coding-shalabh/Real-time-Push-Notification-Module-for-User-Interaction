@@ -7,6 +7,8 @@ import styles from './DashboardUser.module.css';
 import CreateIcon from '@mui/icons-material/Create';
 import DoneIcon from '@mui/icons-material/Done';
 import Requests from './Requests';
+import CloseIcon from '@mui/icons-material/Close';
+import userImage from '../shalabh-gupta.jpg';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -79,7 +81,7 @@ const DashboardUser = () => {
         };
 
         try {
-            const res = await fetch(apiUrl + data.userData.id +'.json',
+            const res = await fetch(apiUrl + data.userData.id + '.json',
                 {
                     method: 'PATCH',
                     headers: {
@@ -139,7 +141,7 @@ const DashboardUser = () => {
             });
         }
         setPopup(true);
-    },[updatedNotification])
+    }, [updatedNotification])
 
     const handleRequestSubmit = (val) => {
         if (data) {
@@ -200,15 +202,15 @@ const DashboardUser = () => {
         setUpdatedNotification(val);
     }
 
-    const sendUpdateNotificationLog = async (updatedNotificationList)=> {
+    const sendUpdateNotificationLog = async (updatedNotificationList) => {
         const payload = {
             ...data.userData,
             notification: [...updatedNotificationList]
         }
 
         try {
-            
-            const res = await fetch(apiUrl + data.userData.id +'.json', {
+
+            const res = await fetch(apiUrl + data.userData.id + '.json', {
                 method: 'PATCH',
                 headers: {
                     'Content-type': 'application/json'
@@ -216,9 +218,9 @@ const DashboardUser = () => {
                 body: JSON.stringify(payload),
             })
 
-            if(res.ok){
+            if (res.ok) {
                 setAuth(true);
-                setData({...data.userData, notification: [...updatedNotificationList]})
+                setData({ ...data.userData, notification: [...updatedNotificationList] })
                 setUpdatedNotification([...updatedNotificationList])
             }
 
@@ -229,19 +231,27 @@ const DashboardUser = () => {
     }
 
     const handleReadAll = useCallback(() => {
-        setUpdatedNotification((prev) =>{
-            const updatedList = [...prev].map((item) => ({ 
-                ...item, status: 'read' 
-        }))
-        sendUpdateNotificationLog(updatedList);
+        setUpdatedNotification((prev) => {
+            const updatedList = [...prev].map((item) => ({
+                ...item, status: 'read'
+            }))
+            sendUpdateNotificationLog(updatedList);
             return updatedList;
         });
     }, []);
 
 
-    
 
-    const handleLogOut = () => { }
+
+    const handleLogOut = () => {
+
+        setAuth(true);
+        setData({});
+        setNotification({})
+        setUpdatedNotification([]);
+        navigate('/');
+
+     }
 
     // Main JSX structure
     return (
@@ -257,6 +267,7 @@ const DashboardUser = () => {
                         display={'flex'}
                         alignItems={'center'}
                         justifyContent={'center'}
+                        className={styles.MainContainer}
                     >
                         <Box
                             width={'70%'}
@@ -264,6 +275,7 @@ const DashboardUser = () => {
                             alignItems={'center'}
                             justifyContent={'center'}
                             flexDirection={'column'}
+                            className={styles.LeftContainer}
                         >
                             <Box
                                 display={'flex'}
@@ -271,11 +283,13 @@ const DashboardUser = () => {
                                 justifyContent={'space-between'}
                                 flexDirection={'row'}
                                 width={'480px'}
+                                className={styles.UserDetails}
                             >
                                 <Avatar
                                     alt="Remy Sharp"
-                                    src="/static/images/avatar/1.jpg"
+                                    src={userImage}
                                     sx={{ width: '120px', height: '120px' }}
+                                    className={styles.Avatar}
                                 />
                                 <Box
                                     display={'flex'}
@@ -283,25 +297,12 @@ const DashboardUser = () => {
                                     justifyContent={'center'}
                                     flexDirection={'column'}
                                     marginLeft={5}
+                                    className={styles.FormFields}
                                 >
                                     <TextField
-                                        value={
-                                            userDetails
-                                                ? userDetails.username
-                                                : data.userData.username
-                                        }
-                                        disabled={editForm}
-                                        sx={{
-                                            background: editForm ? '' : 'white',
-                                            borderRadius: '5px',
-                                            width: '255px',
-                                        }}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                e.target.value,
-                                                'username'
-                                            )
-                                        }
+                                        value={userDetails ? userDetails.username : data.userData.username} disabled={editForm}
+                                        sx={{background: editForm ? '' : 'white',borderRadius: '5px',width: '255px',}}
+                                        onChange={(e) =>handleInputChange(e.target.value,'username')}
                                     />
                                     <OutlinedInput
                                         type={editForm ? 'password' : 'text'}
@@ -325,6 +326,8 @@ const DashboardUser = () => {
                                                 'password'
                                             )
                                         }
+
+                                        className={styles.FormFields}
                                     />
                                 </Box>
                                 <Box
@@ -332,6 +335,7 @@ const DashboardUser = () => {
                                     alignItems={'center'}
                                     justifyContent={'center'}
                                     flexDirection={'column'}
+                                    className={styles.UserDetailsUpdate}
                                 >
                                     <IconButton
                                         sx={{ marginLeft: '20px' }}
@@ -358,6 +362,7 @@ const DashboardUser = () => {
                                     width: '500px',
                                     marginTop: '20px',
                                 }}
+                                className={styles.Divider}
                             />
                             <Box>
                                 <Requests
@@ -381,6 +386,7 @@ const DashboardUser = () => {
                             display={'flex'}
                             alignItems={'center'}
                             justifyContent={'center'}
+                            className={styles.RightContainer}
                         >
                             <Box
                                 position={'relative'}
@@ -395,6 +401,7 @@ const DashboardUser = () => {
                                 alignItems={'center'}
                                 justifyContent={'center'}
                                 border={'1px solid #14213d'}
+                                className={styles.NotificationBar}
                             >
                                 <h4 style={NotificationBar}>
                                     Notifcation Bar{' '}
@@ -466,19 +473,26 @@ const DashboardUser = () => {
                             disableEscapeKeyDown={true}
                         >
                             <DialogTitle>{notification.title}</DialogTitle>
+                            <Divider sx={{ borderColor: 'light-grey', borderWidth: '1.2px' }} />
                             <DialogContent>
                                 <DialogContentText>
-                                    <Box>
+                                    <Box sx={{ color: '#000' }}>
                                         {notification.description}
                                     </Box>
-                                    <Box>
-                                        {notification.date}
-                                        {notification.time}
+                                    <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={'100%'} marginTop={1}>
+                                        <span style={{ fontSize: '12px', fontWeight: 500, color: '#000' }}>
+
+                                            {notification.date}
+                                        </span>
+                                        <span style={{ fontSize: '12px', fontWeight: 500, color: '#000' }}>
+                                            {notification.time}
+
+                                        </span>
                                     </Box>
                                 </DialogContentText>
-                                <DialogActions>
-                                    <Button onClick={handleClosePopup}>
-                                        Close
+                                <DialogActions sx={{ padding: 0 }}>
+                                    <Button onClick={handleClosePopup} sx={{ padding: 0, textAlign: 'right', justifyContent: 'flex-end', color: '#000' }}>
+                                        <CloseIcon />
                                     </Button>
                                 </DialogActions>
                             </DialogContent>

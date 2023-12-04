@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Box, Button, FormControl, InputLabel, OutlinedInput } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
+import styles from './Login.module.css'
 
 export default function Login(props) {
 
@@ -80,11 +81,11 @@ export default function Login(props) {
                 <Box>
                     <FormControl sx={{ borderRadius: '5px',background:'white', display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column',marginBottom: '20px' }}>
                         <InputLabel htmlFor='Username' color={'black'}>UserName</InputLabel>
-                        <OutlinedInput onChange={(e) => handleForm(e.target.value, 'username')} type='text' label='Username' id='Username' color={'black'} value={user.username} sx={{width: '400px'}} required />
+                        <OutlinedInput className={styles.FormFields} onChange={(e) => handleForm(e.target.value, 'username')} type='text' label='Username' id='Username' color={'black'} value={user.username} sx={{width: '400px'}} required />
                     </FormControl>
                     <FormControl sx={{ borderRadius: '5px',background:'white', display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column',marginBottom: '20px' }}>
                         <InputLabel htmlFor='Password' color={'black'}>Password</InputLabel>
-                        <OutlinedInput onChange={(e) => handleForm(e.target.value, 'password')} type='password' label='Password' color={'black'} value={user.password} sx={{width: '400px'}} required />
+                        <OutlinedInput className={styles.FormFields} onChange={(e) => handleForm(e.target.value, 'password')} type='password' label='Password' color={'black'} value={user.password} sx={{width: '400px'}} required />
                     </FormControl>
                     <FormControl sx={{ display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column'}}>
                     </FormControl>

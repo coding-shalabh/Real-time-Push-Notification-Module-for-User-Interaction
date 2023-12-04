@@ -1,7 +1,90 @@
+
+.MainContainer {
+    
+}
+
+
 .readMessage span, .readMessage p{
     font-weight: bold;
 }
 
 .unreadMessage span, .unreadMessage p{
-    font-weight: 300;
+    font-weight: 400;
+    font-size: 14px;
 }
+
+.MainContainer {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Styles for smaller screens (e.g., tablets) */
+  @media (max-width: 768px) {
+    .MainContainer {
+      flex-direction: column;
+    }
+  
+    /* Add more specific styles for smaller screens as needed */
+  }
+  
+  /* Styles for even smaller screens (e.g., mobile devices) */
+  @media (max-width: 480px) {
+    /* Add specific styles for smaller screens */
+  
+    .MainContainer {
+      width: 100%;
+
+    }
+
+    .LeftContainer {
+        width: 100%;
+    }
+
+    .title {
+      font-size: 1.5rem;
+    }
+  
+    .Avatar {
+        width: 75px;
+        height: 75px;
+        margin-bottom: 20px;
+        border: 2px solid #000;
+    box-shadow: 2px 2px 13px #00000a61;
+    }
+
+    .FormFields  input{
+        width: 300px;
+    }
+
+    .FormFields {
+        margin-left: 0;
+    }
+
+
+    .RightContainer {
+        width: 100%;
+    }
+  
+    .NotificationBar {
+        margin-top: 20px;
+        height: 300px;
+        width: calc(100% - 30px);
+    }
+
+    .UserDetails {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .UserDetailsUpdate {
+        flex-direction: row;
+    }
+
+    .Divider {
+        width: 200px;
+    }
+
+    /* Add more specific styles for mobile screens as needed */
+  }

@@ -3,6 +3,7 @@ import { Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, Outli
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
 import Login from './Login';
+import Styles from './Login.module.css'
 
 export default function Signup(props) {
 
@@ -108,17 +109,17 @@ export default function Signup(props) {
                 <Box>
                     <FormControl sx={{ borderRadius: '5px',background:'white', display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column',marginBottom: '20px' }}>
                         <InputLabel htmlFor='Username' color={'black'}>UserName</InputLabel>
-                        <OutlinedInput onChange={(e) => handleForm(e.target.value, 'username')} type='text' label='Username' id='Username' color={'black'} value={user.username} sx={{width: '400px'}} required />
+                        <OutlinedInput className={Styles.FormFields} onChange={(e) => handleForm(e.target.value, 'username')} type='text' label='Username' id='Username' color={'black'} value={user.username} sx={{width: '400px'}} required />
                     </FormControl>
                     <FormControl sx={{ borderRadius: '5px',background:'white', display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column',marginBottom: '20px' }}>
                         <InputLabel htmlFor='Password' color={'black'}>Password</InputLabel>
-                        <OutlinedInput onChange={(e) => handleForm(e.target.value, 'password')} type='password' label='Password' color={'black'} value={user.password} sx={{width: '400px'}} required />
+                        <OutlinedInput className={Styles.FormFields} onChange={(e) => handleForm(e.target.value, 'password')} type='password' label='Password' color={'black'} value={user.password} sx={{width: '400px'}} required />
                     </FormControl>
                     <FormControl sx={{ display: 'flex', alignContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'column'}}>
-                    <FormControlLabel
+                    {/* <FormControlLabel
                         control={<Checkbox onChange={(e) => handleForm(e.target.checked, 'type')} required />}
                         label="isAdmin"
-                    />
+                    /> */}
                         
                     </FormControl>
                     <Button onClick={handleSubmit} variant='contained' color='black' sx={{background: 'white', marginTop: '10px'}} >Submit</Button>
